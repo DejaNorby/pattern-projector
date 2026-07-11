@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -sf http://localhost:3000 -o /dev/null -w \"%{http_code}\\\\n\")",
+      "Read(//tmp/**)",
+      "Bash(npm install *)",
+      "Bash(npx playwright *)",
+      "Bash(node --preserve-symlinks -e \"require\\('playwright'\\)\")",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node verify-shapes.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node verify-shapes2.js)",
+      "Bash(git checkout *)",
+      "Bash(git status *)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-lineweight.js)",
+      "Bash(tasklist //FI \"IMAGENAME eq node.exe\")",
+      "Bash(sed -i 's/svg rect\\\\[width\\\\]/rect[stroke]/' check-geometry2.js check-stroke.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node check-stroke.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node check-geometry2.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-lineweight2.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-lineweight3.js)",
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-final.js)"
+    ]
+  }
+}

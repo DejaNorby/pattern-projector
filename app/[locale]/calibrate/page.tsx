@@ -75,6 +75,9 @@ import { Button } from "@/_components/buttons/button";
 import { erosionFilter } from "@/_lib/erode";
 import SvgViewer from "@/_components/svg-viewer";
 import { toggleFullScreen } from "@/_lib/full-screen";
+import ShapesViewer from "@/_components/shapes-viewer";
+import ShapeModal from "@/_components/modal/shape-modal";
+import useShapes from "@/_hooks/use-shapes";
 
 const defaultStitchSettings = {
   lineCount: 1,
@@ -136,6 +139,7 @@ export default function Page() {
     ButtonColor.PURPLE,
   );
   const [mailOpen, setMailOpen] = useState(false);
+  const [shapeModalOpen, setShapeModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState<null | string>(null);
 
   const [points, dispatch] = useReducer(pointsReducer, []);
@@ -144,6 +148,8 @@ export default function Page() {
     defaultStitchSettings,
   );
   const { layers, dispatchLayersAction } = useLayers(file?.name ?? "default");
+  const { shapes, dispatchShapesAction } = useShapes();
+  const hasShapes = Object.keys(shapes).length > 0;
   const setLayers = useCallback(
     (l: Layers) => dispatchLayersAction({ type: "set-layers", layers: l }),
     [dispatchLayersAction],
@@ -155,6 +161,18 @@ export default function Page() {
   const patternScaleFactor =
     Number(patternScale) === 0 ? 1 : Number(patternScale);
 
+  // Custom shapes and an uploaded file are mutually exclusive "patterns" -
+  // creating a shape while a file is loaded replaces it.
+  useEffect(() => {
+    if (hasShapes && file !== null) {
+      setFile(null);
+      setFileLoadStatus(LoadStatusEnum.DEFAULT);
+      setLayers({});
+      setPageCount(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasShapes]);
+
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const t = useTranslations("Header");
@@ -164,6 +182,14 @@ export default function Page() {
 
   const svgStyle = {
     filter: filter(magnifying, lineThickness, displaySettings.theme),
+  };
+  // Line weight erosion exists to compensate for real-world print/scan line
+  // bleed in uploaded patterns; generated shapes are exact vector geometry
+  // with no bleed to correct for, and eroding their thin outlines makes edges
+  // vanish unevenly (a hairline stroke is much more fragile than typical
+  // pattern line art). So shapes only get the theme color filter, not erosion.
+  const shapesSvgStyle = {
+    filter: themeFilter(displaySettings.theme),
   };
 
   // Set erosions when not magnifying so the user can see text/lines more clearly when magnifying
@@ -292,6 +318,7 @@ export default function Page() {
       setMeasuring(false);
       setPageCount(0);
       setLayers({});
+      dispatchShapesAction({ type: "clear" });
       dispatchPatternScaleAction({ type: "set", scale: "1.00" });
       const lineThicknessString = localStorage.getItem(
         `lineThickness:${files[0].name}`,
@@ -629,7 +656,17 @@ export default function Page() {
                 menuStates={menuStates}
                 file={file}
               >
-                {file === null || file.type === "application/pdf" ? (
+                {hasShapes ? (
+                  <ShapesViewer
+                    shapes={shapes}
+                    svgStyle={shapesSvgStyle}
+                    setLayoutWidth={setLayoutWidth}
+                    setLayoutHeight={setLayoutHeight}
+                    patternScaleFactor={patternScaleFactor}
+                    lineThickness={magnifying ? 0 : lineThickness}
+                    calibrationTransform={calibrationTransform}
+                  />
+                ) : file === null || file.type === "application/pdf" ? (
                   <PdfViewer
                     file={file}
                     setPageCount={setPageCount}
@@ -754,6 +791,7 @@ export default function Page() {
                   setMailOpen={setMailOpen}
                   invalidCalibration={checkIsConcave(points)}
                   file={file}
+                  setShapeModalOpen={setShapeModalOpen}
                 />
                 {isCalibrating && menuStates.nav && (
                   <TroubleshootingButton
@@ -761,6 +799,12 @@ export default function Page() {
                   />
                 )}
                 <MailModal open={mailOpen} setOpen={setMailOpen} />
+                <ShapeModal
+                  open={shapeModalOpen}
+                  onClose={() => setShapeModalOpen(false)}
+                  shapes={shapes}
+                  dispatchShapesAction={dispatchShapesAction}
+                />
               </menu>
 
               {!isCalibrating && file !== null && (

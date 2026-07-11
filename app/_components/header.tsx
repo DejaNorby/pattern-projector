@@ -68,6 +68,7 @@ import MailIcon from "@/_icons/mail-icon";
 import ZoomInIcon from "@/_icons/zoom-in-icon";
 import { acceptedMimeTypes } from "@/_lib/is-valid-file";
 import { toggleFullScreen } from "@/_lib/full-screen";
+import ShapesIcon from "@/_icons/shapes-icon";
 
 export default function Header({
   isCalibrating,
@@ -108,6 +109,7 @@ export default function Header({
   setMailOpen,
   invalidCalibration,
   file,
+  setShapeModalOpen,
 }: {
   isCalibrating: boolean;
   setIsCalibrating: Dispatch<SetStateAction<boolean>>;
@@ -147,6 +149,7 @@ export default function Header({
   setMailOpen: Dispatch<SetStateAction<boolean>>;
   invalidCalibration: boolean;
   file: File | null;
+  setShapeModalOpen: Dispatch<SetStateAction<boolean>>;
 }) {
   const [calibrationAlert, setCalibrationAlert] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -594,6 +597,11 @@ export default function Header({
                 disabled={magnifying}
               >
                 <MarkAndMeasureIcon ariaLabel={t("measure")} />
+              </IconButton>
+            </Tooltip>
+            <Tooltip description={t("createShape")}>
+              <IconButton onClick={() => setShapeModalOpen(true)}>
+                <ShapesIcon ariaLabel={t("createShape")} />
               </IconButton>
             </Tooltip>
           </div>
