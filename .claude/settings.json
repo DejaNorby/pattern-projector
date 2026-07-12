@@ -17,7 +17,20 @@
       "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node check-geometry2.js)",
       "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-lineweight2.js)",
       "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-lineweight3.js)",
-      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-final.js)"
+      "Bash(NODE_PATH=\"C:\\\\Git\\\\pattern-projector\\\\node_modules\" node repro-final.js)",
+      "Bash(node \"C:\\\\Users\\\\dlkei\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Git-pattern-projector\\\\c8cd7cf3-e034-4309-94bf-9308224ea8af\\\\scratchpad\\\\verify-v2-debug.js\")",
+      "Bash(cp \"C:\\\\Users\\\\dlkei\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Git-pattern-projector\\\\c8cd7cf3-e034-4309-94bf-9308224ea8af\\\\scratchpad\\\\verify-v2-debug.js\" \"c:\\\\Git\\\\pattern-projector\\\\verify-v2-debug.js\")",
+      "Bash(cp \"C:\\\\Users\\\\dlkei\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Git-pattern-projector\\\\c8cd7cf3-e034-4309-94bf-9308224ea8af\\\\scratchpad\\\\multi-size-pattern.svg\" \"c:\\\\Git\\\\pattern-projector\\\\multi-size-pattern.svg\")",
+      "Bash(node verify-v2-debug.js)",
+      "Bash(sed -i 's/getByRole\\(\"button\", { name: \\\\/stop drawing\\\\/i }\\)/getByRole\\(\"button\", { name: \\\\/draw a piece to copy\\\\/i }\\)/' verify-v2-pdf.js)",
+      "Bash(node verify-v2-pdf.js)",
+      "Bash(npx next *)",
+      "Bash(npx jest *)",
+      "Bash(git stash *)",
+      "Bash(cd \"c:\\\\Git\\\\pattern-projector\" && rm -f verify-v2-pdf.js verify-v2-regression.js test-pattern.pdf multi-size-pattern.svg pdfv2-*.png regv2-*.png && git status --short)"
+    ],
+    "additionalDirectories": [
+      "C:\\Git\\pattern-projector"
     ]
   }
 }

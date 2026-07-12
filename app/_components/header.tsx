@@ -69,6 +69,8 @@ import ZoomInIcon from "@/_icons/zoom-in-icon";
 import { acceptedMimeTypes } from "@/_lib/is-valid-file";
 import { toggleFullScreen } from "@/_lib/full-screen";
 import ShapesIcon from "@/_icons/shapes-icon";
+import LayoutIcon from "@/_icons/layout-icon";
+import MarqueeSelectIcon from "@/_icons/marquee-select-icon";
 
 export default function Header({
   isCalibrating,
@@ -110,6 +112,11 @@ export default function Header({
   invalidCalibration,
   file,
   setShapeModalOpen,
+  layoutMode,
+  setLayoutMode,
+  canUseLayoutMode,
+  addingPiece,
+  setAddingPiece,
 }: {
   isCalibrating: boolean;
   setIsCalibrating: Dispatch<SetStateAction<boolean>>;
@@ -150,6 +157,11 @@ export default function Header({
   invalidCalibration: boolean;
   file: File | null;
   setShapeModalOpen: Dispatch<SetStateAction<boolean>>;
+  layoutMode: boolean;
+  setLayoutMode: Dispatch<SetStateAction<boolean>>;
+  canUseLayoutMode: boolean;
+  addingPiece: boolean;
+  setAddingPiece: Dispatch<SetStateAction<boolean>>;
 }) {
   const [calibrationAlert, setCalibrationAlert] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -604,6 +616,37 @@ export default function Header({
                 <ShapesIcon ariaLabel={t("createShape")} />
               </IconButton>
             </Tooltip>
+            <Tooltip
+              description={
+                canUseLayoutMode
+                  ? layoutMode
+                    ? t("layoutModeOff")
+                    : t("layoutModeOn")
+                  : t("layoutModeDisabled")
+              }
+            >
+              <IconButton
+                onClick={() => setLayoutMode(!layoutMode)}
+                active={layoutMode}
+                disabled={!canUseLayoutMode}
+              >
+                <LayoutIcon ariaLabel={t("layoutModeOn")} />
+              </IconButton>
+            </Tooltip>
+            {layoutMode && (
+              <Tooltip
+                description={
+                  addingPiece ? t("addPieceOff") : t("addPieceOn")
+                }
+              >
+                <IconButton
+                  onClick={() => setAddingPiece(!addingPiece)}
+                  active={addingPiece}
+                >
+                  <MarqueeSelectIcon ariaLabel={t("addPieceOn")} />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <label

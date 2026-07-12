@@ -156,6 +156,7 @@ export default function CustomRenderer() {
   return (
     <canvas
       className={`${_className}__canvas`}
+      data-pdf-page-canvas=""
       ref={canvasElement}
       width={renderWidth}
       height={renderHeight}

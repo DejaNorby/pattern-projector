@@ -78,6 +78,11 @@ import { toggleFullScreen } from "@/_lib/full-screen";
 import ShapesViewer from "@/_components/shapes-viewer";
 import ShapeModal from "@/_components/modal/shape-modal";
 import useShapes from "@/_hooks/use-shapes";
+import PieceLayoutViewer, {
+  ExtractedContent,
+} from "@/_components/piece-layout-viewer";
+import PieceInteractionLayer from "@/_components/canvases/piece-interaction-layer";
+import usePieceInstances from "@/_hooks/use-piece-instances";
 
 const defaultStitchSettings = {
   lineCount: 1,
@@ -150,6 +155,15 @@ export default function Page() {
   const { layers, dispatchLayersAction } = useLayers(file?.name ?? "default");
   const { shapes, dispatchShapesAction } = useShapes();
   const hasShapes = Object.keys(shapes).length > 0;
+  const [layoutMode, setLayoutMode] = useState(false);
+  const [addingPiece, setAddingPiece] = useState(false);
+  const [selectedPieceId, setSelectedPieceId] = useState<string | null>(null);
+  const [pieceContent, setPieceContent] = useState<
+    Map<string, ExtractedContent>
+  >(new Map());
+  const { instances: pieceInstances, dispatchInstancesAction } =
+    usePieceInstances(file?.name ?? "default");
+  const canUseLayoutMode = file !== null && pageCount <= 1;
   const setLayers = useCallback(
     (l: Layers) => dispatchLayersAction({ type: "set-layers", layers: l }),
     [dispatchLayersAction],
@@ -172,6 +186,18 @@ export default function Page() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasShapes]);
+
+  useEffect(() => {
+    if (!canUseLayoutMode && layoutMode) {
+      setLayoutMode(false);
+    }
+  }, [canUseLayoutMode, layoutMode]);
+
+  useEffect(() => {
+    if (!layoutMode && addingPiece) {
+      setAddingPiece(false);
+    }
+  }, [layoutMode, addingPiece]);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -319,6 +345,9 @@ export default function Page() {
       setPageCount(0);
       setLayers({});
       dispatchShapesAction({ type: "clear" });
+      setLayoutMode(false);
+      setSelectedPieceId(null);
+      setPieceContent(new Map());
       dispatchPatternScaleAction({ type: "set", scale: "1.00" });
       const lineThicknessString = localStorage.getItem(
         `lineThickness:${files[0].name}`,
@@ -705,7 +734,34 @@ export default function Page() {
                     patternScaleFactor={patternScaleFactor}
                   />
                 )}
+                {layoutMode && canUseLayoutMode && (
+                  <PieceLayoutViewer
+                    instances={pieceInstances}
+                    content={pieceContent}
+                    selectedId={selectedPieceId}
+                    svgStyle={shapesSvgStyle}
+                    patternScaleFactor={patternScaleFactor}
+                  />
+                )}
               </Draggable>
+              {layoutMode && canUseLayoutMode && file !== null && (
+                <PieceInteractionLayer
+                  file={file}
+                  dataUrl={dataUrl ?? ""}
+                  layers={layers}
+                  instances={pieceInstances}
+                  dispatchInstancesAction={dispatchInstancesAction}
+                  content={pieceContent}
+                  setContent={setPieceContent}
+                  selectedId={selectedPieceId}
+                  setSelectedId={setSelectedPieceId}
+                  calibrationTransform={calibrationTransform}
+                  perspective={perspective}
+                  patternScaleFactor={patternScaleFactor}
+                  isCalibrating={isCalibrating}
+                  addingPiece={addingPiece}
+                />
+              )}
               <OverlayCanvas
                 className={`absolute top-0 pointer-events-none`}
                 points={points}
@@ -792,6 +848,11 @@ export default function Page() {
                   invalidCalibration={checkIsConcave(points)}
                   file={file}
                   setShapeModalOpen={setShapeModalOpen}
+                  layoutMode={layoutMode}
+                  setLayoutMode={setLayoutMode}
+                  canUseLayoutMode={canUseLayoutMode}
+                  addingPiece={addingPiece}
+                  setAddingPiece={setAddingPiece}
                 />
                 {isCalibrating && menuStates.nav && (
                   <TroubleshootingButton

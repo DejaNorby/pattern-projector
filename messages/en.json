@@ -278,7 +278,19 @@
     "zoomOut": "Zoom out (Z)",
     "mail": "Mail from Courtney",
     "invalidCalibration": "The calibration grid is not valid. Press 'Reset calibration' to try again.",
-    "createShape": "Create shape"
+    "createShape": "Create shape",
+    "layoutModeOn": "Arrange pattern pieces",
+    "layoutModeOff": "Exit piece layout mode",
+    "layoutModeDisabled": "Open a pattern to arrange pieces",
+    "addPieceOn": "Draw a piece to copy",
+    "addPieceOff": "Stop drawing"
+  },
+  "PieceToolbar": {
+    "rotate90": "Rotate 90 degrees",
+    "flipHorizontal": "Flip horizontally",
+    "flipVertical": "Flip vertically",
+    "duplicate": "Duplicate piece",
+    "delete": "Delete piece"
   },
   "ShapeModal": {
     "title": "Create Shape",

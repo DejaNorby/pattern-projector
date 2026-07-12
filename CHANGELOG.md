@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Create custom shapes (rectangles, ovals, triangles, pie slices) with metric or imperial dimensions, calibrated the same way as uploaded patterns
+- Arrange pattern pieces into a cutting layout: draw a rectangle to copy a piece out of the pattern, then move, duplicate, flip, and rotate copies; mirrored pieces are marked with a "cut 2" dot texture
+
 ## [1.3.0] - 2025-06-25
 
 ### Added
